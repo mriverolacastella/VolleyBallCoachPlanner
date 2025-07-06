@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🧠 Tácticas de Juego</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Tácticas de Juego</h1>
+    <form id="formTactica">
+      <input type="text" id="nombreTactica" placeholder="Nombre de la táctica" required />
+      <input type="file" id="archivoTactica" accept=".pdf,.jpg,.jpeg,.png" required />
+      <button type="submit" class="btn-principal">📤 Subir táctica</button>
+    </form>
+    <h2>📋 Tácticas Registradas</h2>
+    <ul id="listaTacticas"></ul>
+    <a class="btn-secundario" href="dashboard.html">⬅️ Volver al Dashboard</a>
+  </div>
+  <script>
+    const form = document.getElementById('formTactica');
+    const lista = document.getElementById('listaTacticas');
+    let tacticas = JSON.parse(localStorage.getItem('tacticas')) || [];
+
+    function renderTacticas() {
+      lista.innerHTML = '';
+      tacticas.forEach((t) => {
+        const li = document.createElement('li');
+        const blob = new Blob([new Uint8Array(t.archivo.data)], { type: t.archivo.tipo });
+        const url = URL.createObjectURL(blob);
+        li.innerHTML = `<strong>${t.nombre}</strong> - <a href="\${url}" target="_blank">📎 Ver archivo</a>`;
+        lista.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombreTactica').value;
+      const archivoInput = document.getElementById('archivoTactica');
+      const archivo = archivoInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const nuevaTactica = {
+          nombre: nombre,
+          archivo: {
+            nombre: archivo.name,
+            tipo: archivo.type,
+            data: Array.from(new Uint8Array(event.target.result))
+          }
+        };
+        tacticas.push(nuevaTactica);
+        localStorage.setItem('tacticas', JSON.stringify(tacticas));
+        renderTacticas();
+        form.reset();
+      };
+      reader.readAsArrayBuffer(archivo);
+    });
+
+    renderTacticas();
+  </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>📆 Calendario del Equipo</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .calendar-container {
+      max-width: 800px;
+      margin: auto;
+    }
+    table.calendar {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+    .calendar th, .calendar td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      height: 80px;
+    }
+    .calendar th {
+      background-color: #f2f2f2;
+    }
+    .event-dia {
+      background-color: #b3e5fc;
+      font-weight: bold;
+      color: #01579b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container calendar-container">
+    <h1>📆 Calendario del Equipo</h1>
+    <div id="calendario"></div>
+    <a class="btn-secundario" href="dashboard.html">⬅️ Volver al Dashboard</a>
+  </div>
+
+  <script>
+    function generarCalendario(mes, año) {
+      const diasMes = new Date(año, mes + 1, 0).getDate();
+      const primerDia = new Date(año, mes, 1).getDay();
+      const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+      const tabla = document.createElement('table');
+      tabla.className = 'calendar';
+      const thead = tabla.createTHead();
+      const filaDias = thead.insertRow();
+      diasSemana.forEach(d => {
+        const th = document.createElement('th');
+        th.textContent = d;
+        filaDias.appendChild(th);
+      });
+
+      const tbody = tabla.createTBody();
+      let fila = tbody.insertRow();
+      for (let i = 0; i < primerDia; i++) {
+        fila.insertCell();
+      }
+
+      const eventos = JSON.parse(localStorage.getItem('eventosCalendario')) || [];
+
+      for (let dia = 1; dia <= diasMes; dia++) {
+        if (fila.cells.length === 7) fila = tbody.insertRow();
+        const celda = fila.insertCell();
+        celda.textContent = dia;
+        const fechaActual = `${año}-${String(mes+1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+        if (eventos.find(e => e.fecha === fechaActual)) {
+          celda.className = 'event-dia';
+        }
+      }
+
+      const contenedor = document.getElementById('calendario');
+      contenedor.innerHTML = '';
+      contenedor.appendChild(tabla);
+    }
+
+    const hoy = new Date();
+    generarCalendario(hoy.getMonth(), hoy.getFullYear());
+  </script>
+</body>
+</html>

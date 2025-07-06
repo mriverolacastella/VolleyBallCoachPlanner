@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>📂 Fichas de Jugadoras</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📂 Fichas de Jugadoras</h1>
+    <form id="formFicha">
+      <input type="text" id="nombreFicha" placeholder="Nombre del documento o jugadora" required />
+      <input type="file" id="archivoFicha" accept=".pdf" required />
+      <button type="submit" class="btn-principal">📥 Subir Ficha</button>
+    </form>
+    <h2>📄 Fichas Registradas</h2>
+    <ul id="listaFichas"></ul>
+    <a class="btn-secundario" href="dashboard.html">⬅️ Volver al Dashboard</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('formFicha');
+    const lista = document.getElementById('listaFichas');
+    let fichas = JSON.parse(localStorage.getItem('fichas')) || [];
+
+    function renderFichas() {
+      lista.innerHTML = '';
+      fichas.forEach((f) => {
+        const li = document.createElement('li');
+        const blob = new Blob([new Uint8Array(f.archivo.data)], { type: f.archivo.tipo });
+        const url = URL.createObjectURL(blob);
+        li.innerHTML = `<strong>${f.nombre}</strong> - <a href="\${url}" target="_blank">📄 Ver ficha</a>`;
+        lista.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nombre = document.getElementById('nombreFicha').value;
+      const archivoInput = document.getElementById('archivoFicha');
+      const archivo = archivoInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const nuevaFicha = {
+          nombre: nombre,
+          archivo: {
+            nombre: archivo.name,
+            tipo: archivo.type,
+            data: Array.from(new Uint8Array(event.target.result))
+          }
+        };
+        fichas.push(nuevaFicha);
+        localStorage.setItem('fichas', JSON.stringify(fichas));
+        renderFichas();
+        form.reset();
+      };
+      reader.readAsArrayBuffer(archivo);
+    });
+
+    renderFichas();
+  </script>
+</body>
+</html>

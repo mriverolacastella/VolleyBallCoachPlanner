@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🗓️ Entrenamientos</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🗓️ Gestión de Entrenamientos</h1>
+    <form id="formEntrenamiento">
+      <label>📅 Fecha del entrenamiento</label>
+      <input type="date" id="fecha" required />
+      <label>📎 Subir archivo PDF</label>
+      <input type="file" id="archivoPDF" accept="application/pdf" required />
+      <button type="submit" class="btn-principal">📥 Añadir entrenamiento</button>
+    </form>
+    <h2>📋 Lista de entrenamientos</h2>
+    <ul id="listaEntrenamientos"></ul>
+    <a class="btn-secundario" href="dashboard.html">⬅️ Volver al Dashboard</a>
+  </div>
+  <script src="assets/js/entrenamientos.js"></script>
+</body>
+</html>

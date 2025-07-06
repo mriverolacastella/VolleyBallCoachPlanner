@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Volleyball Coach Planner - Equipos</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🏐 Volleyball Coach Planner</h1>
+
+    <h2>Selecciona tu equipo</h2>
+    <div id="listaEquipos" class="lista-equipos"></div>
+
+    <button id="mostrarFormularioBtn" class="btn-secundario">➕ Crear nuevo equipo</button>
+    <form id="formularioEquipo" style="display:none;" class="formulario-equipo">
+      <input type="text" id="nombre" placeholder="Nombre del equipo" required />
+      <input type="text" id="club" placeholder="Club" />
+      <input type="text" id="categoria" placeholder="Categoría" />
+      <input type="text" id="pabellon" placeholder="Pabellón" />
+      <input type="text" id="federacion" placeholder="Federación" />
+      <input type="text" id="temporada" placeholder="Temporada (ej. 24-25)" />
+      <input type="url" id="foto" placeholder="URL de foto del equipo (opcional)" />
+      <button type="submit" class="btn-principal">💾 Guardar equipo</button>
+    </form>
+  </div>
+
+  <script src="assets/js/equipos.js"></script>
+</body>
+</html>

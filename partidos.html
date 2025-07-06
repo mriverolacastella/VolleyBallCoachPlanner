@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>🏐 Gestión de Partidos</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🏐 Gestión de Partidos</h1>
+    <form id="formPartido">
+      <input type="date" id="fechaPartido" required />
+      <input type="file" id="archivoPartido" accept="application/pdf" required />
+      <button type="submit" class="btn-principal">📎 Subir Partido</button>
+    </form>
+    <h2>📅 Partidos Registrados</h2>
+    <ul id="listaPartidos"></ul>
+    <a class="btn-secundario" href="dashboard.html">⬅️ Volver al Dashboard</a>
+  </div>
+  <script>
+    const form = document.getElementById('formPartido');
+    const lista = document.getElementById('listaPartidos');
+    let partidos = JSON.parse(localStorage.getItem('partidos')) || [];
+
+    function renderPartidos() {
+      lista.innerHTML = '';
+      partidos.forEach((p, i) => {
+        const li = document.createElement('li');
+        const enlace = URL.createObjectURL(new Blob([new Uint8Array(p.archivo.data)], { type: "application/pdf" }));
+        li.innerHTML = `<strong>${p.fecha}</strong> - <a href="\${enlace}" target="_blank">📄 Ver archivo</a>`;
+        lista.appendChild(li);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fecha = document.getElementById('fechaPartido').value;
+      const archivoInput = document.getElementById('archivoPartido');
+      const archivo = archivoInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const newPartido = {
+          fecha: fecha,
+          archivo: {
+            name: archivo.name,
+            data: Array.from(new Uint8Array(event.target.result))
+          }
+        };
+        partidos.push(newPartido);
+        localStorage.setItem('partidos', JSON.stringify(partidos));
+        renderPartidos();
+        form.reset();
+      };
+      reader.readAsArrayBuffer(archivo);
+    });
+
+    renderPartidos();
+  </script>
+</body>
+</html>
